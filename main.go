@@ -121,7 +121,7 @@ type Decl struct {
 	lhs string
 	rhs Exp
 }
-type Assig struct{
+type Assig struct {
 	lhs string
 	rhs Exp
 }
@@ -427,12 +427,10 @@ func or(x, y Exp) Exp {
 	return (Or)([2]Exp{x, y})
 }
 
-// Examples
-
-func run(e Exp) {
+func runExpr(e Exp) {
 	s := make(map[string]Val)
 	t := make(map[string]Type)
-	fmt.Printf("\n ******* ")
+	fmt.Printf("\n ******* EXPRESSIONS ******* \n")
 	fmt.Printf("\n %s", e.pretty())
 	fmt.Printf("\n %s", showVal(e.eval(s)))
 	fmt.Printf("\n %s", showType(e.infer(t)))
@@ -441,17 +439,17 @@ func run(e Exp) {
 func ex1() {
 	ast := plus(mult(number(1), number(2)), number(0))
 
-	run(ast)
+	runExpr(ast)
 }
 
 func ex2() {
 	ast := and(boolean(false), number(0))
-	run(ast)
+	runExpr(ast)
 }
 
 func ex3() {
 	ast := or(boolean(false), number(0))
-	run(ast)
+	runExpr(ast)
 }
 
 func main() {
