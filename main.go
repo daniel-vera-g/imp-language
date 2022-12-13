@@ -126,9 +126,9 @@ type Assign struct {
 	rhs Exp
 }
 
-type While struct{
-    cond    Exp
-    whileS  Stmt
+type While struct {
+	cond Exp
+	stmt Stmt
 }
 
 type IfThenElse struct {
@@ -138,7 +138,7 @@ type IfThenElse struct {
 }
 
 type Print struct {
-    expre      Exp
+	expre Exp
 }
 
 // Expression cases (incomplete)
@@ -187,6 +187,20 @@ func (stmt Seq) eval(s ValState) {
 	stmt[1].eval(s)
 }
 
+func (whi While) eval(s ValState) {
+	for whi.cond.eval(s).valB {
+		whi.stmt.eval(s)
+	}
+}
+func (pri Print) eval(s ValState) {
+	v := pri.expre.eval(s)
+
+	if s.flag == ValueInt {
+		fmt.Print("\n %d", valI)
+	} else if s.flag == ValueBool {
+		fmt.Printf("\n %t", valB)
+	}
+}
 func (ite IfThenElse) eval(s ValState) {
 	v := ite.cond.eval(s)
 	if v.flag == ValueBool {
@@ -208,6 +222,11 @@ func (ite IfThenElse) eval(s ValState) {
 func (decl Decl) eval(s ValState) {
 	v := decl.rhs.eval(s)
 	x := (string)(decl.lhs)
+	s[x] = v
+}
+func (assign Assign) eval(s ValState) {
+	v := assign.rhs.eval(s)
+	x := (string)(assign.lhs)
 	s[x] = v
 }
 
@@ -234,6 +253,10 @@ func (decl Decl) check(t TyState) bool {
 func (a Assign) check(t TyState) bool {
 	x := (string)(a.lhs)
 	return t[x] == a.rhs.infer(t)
+}
+
+func (whi While) check(t TyState) bool {
+	whi
 }
 
 /////////////////////////
@@ -306,44 +329,42 @@ func (e Or) pretty() string {
 	return x
 }
 
-func (e Neg) pretty() string{
-    var x string
+func (e Neg) pretty() string {
+	var x string
 
-    x = "!"
-    x += e[0].pretty()
+	x = "!"
+	x += e[0].pretty()
 
-    return x
+	return x
 }
- func (e Equ) pretty() string{
-     var x string
+func (e Equ) pretty() string {
+	var x string
 
-     x = e[0].pretty()
-     x += "=="
-     x += e[1].pretty()
+	x = e[0].pretty()
+	x += "=="
+	x += e[1].pretty()
 
-     return x
-  }
+	return x
+}
 
- func (e Les) pretty() string{
-      var x string
+func (e Les) pretty() string {
+	var x string
 
-      x = e[0].pretty()
-      x += "<"
-      x += e[1].pretty()
+	x = e[0].pretty()
+	x += "<"
+	x += e[1].pretty()
 
-      return x
- }
- func (e Gro) pretty() string{
-     var x string
+	return x
+}
+func (e Gro) pretty() string {
+	var x string
 
-     x = "("
-     x += e[0].pretty()
-     x += ")"
+	x = "("
+	x += e[0].pretty()
+	x += ")"
 
-     return x
- }
-
-
+	return x
+}
 
 // Evaluator
 
@@ -395,6 +416,53 @@ func (e Or) eval(s ValState) Val {
 		return mkBool(b1.valB || b2.valB)
 	}
 	return mkUndefined()
+}
+
+func (e Neg) eval(s ValState) Val {
+	b1 := e[0].eval(s)
+	if b1.flag == ValueBool {
+		return mkBool(!b1.valB)
+	}
+	return mkUndefined()
+}
+
+func (e Equ) eval(s ValState) Val {
+	b1 := e[0].eval(s)
+	b2 := e[1].eval(s)
+
+	switch {
+
+	case b1.flag == ValueBool && b2.flag == ValueBool:
+		return mkBool(b1.valB == b2.valB)
+	case b1.flag == ValueInt && b2.flag == ValueInt:
+
+		if b1.valI == b2.valI {
+			return mkBool(true)
+		} else {
+			return mkBool(false)
+		}
+	}
+	return mkUndefined()
+}
+func (e Les) eval(s ValState) Val {
+	b1 := e[0].eval(s)
+	b2 := e[1].eval(s)
+
+	if b1.flag == ValueInt && b2.flag == ValueInt {
+		if b1.valI < b2.valI {
+			return mkBool(true)
+		} else {
+			return mkBool(false)
+		}
+	}
+	return mkUndefined()
+}
+func (e Gro) eval(s ValState) Val {
+	return e[0].eval(s)
+}
+
+func (v Var) eval(s ValState) Val {
+	return s[(string)(v)]
 }
 
 // Type inferencer/checker
