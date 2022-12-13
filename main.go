@@ -149,6 +149,10 @@ type Mult [2]Exp
 type Plus [2]Exp
 type And [2]Exp
 type Or [2]Exp
+type Neg [1]Exp
+type Equ [2]Exp
+type Les [2]Exp
+type Gro [1]Exp
 type Var string
 
 /////////////////////////
@@ -301,6 +305,45 @@ func (e Or) pretty() string {
 
 	return x
 }
+
+func (e Neg) pretty() string{
+    var x string
+
+    x = "!"
+    x += e[0].pretty()
+
+    return x
+}
+ func (e Equ) pretty() string{
+     var x string
+
+     x = e[0].pretty()
+     x += "=="
+     x += e[1].pretty()
+
+     return x
+  }
+
+ func (e Les) pretty() string{
+      var x string
+
+      x = e[0].pretty()
+      x += "<"
+      x += e[1].pretty()
+
+      return x
+ }
+ func (e Gro) pretty() string{
+     var x string
+
+     x = "("
+     x += e[0].pretty()
+     x += ")"
+
+     return x
+ }
+
+
 
 // Evaluator
 
