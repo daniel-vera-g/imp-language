@@ -121,9 +121,14 @@ type Decl struct {
 	lhs string
 	rhs Exp
 }
-type Assig struct{
+type Assign struct {
 	lhs string
 	rhs Exp
+}
+
+type While struct{
+    cond    Exp
+    whileS  Stmt
 }
 
 type IfThenElse struct {
@@ -132,9 +137,8 @@ type IfThenElse struct {
 	elseStmt Stmt
 }
 
-type Assign struct {
-	lhs string
-	rhs Exp
+type Print struct {
+    expre      Exp
 }
 
 // Expression cases (incomplete)
@@ -158,6 +162,18 @@ func (stmt Seq) pretty() string {
 
 func (decl Decl) pretty() string {
 	return decl.lhs + " := " + decl.rhs.pretty()
+}
+
+func (assign Assign) pretty() string {
+	return assign.lhs + " = " + assign.rhs.pretty()
+}
+
+func (ifthenelse IfThenElse) pretty() string {
+	return "if+" + ifthenelse.cond.pretty() + ifthenelse.thenStmt.pretty + "else" + ifthenelse.elseStmt.pretty()
+}
+
+func (print Print) pretty() string {
+	return print.expre.pretty()
 }
 
 // eval
