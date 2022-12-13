@@ -436,27 +436,7 @@ func runExpr(e Exp) {
 	fmt.Printf("\n %s", showType(e.infer(t)))
 }
 
-func ex1() {
-	ast := plus(mult(number(1), number(2)), number(0))
-
-	runExpr(ast)
-}
-
-func ex2() {
-	ast := and(boolean(false), number(0))
-	runExpr(ast)
-}
-
-func ex3() {
-	ast := or(boolean(false), number(0))
-	runExpr(ast)
-}
-
 func main() {
 
 	fmt.Printf("\n")
-
-	ex1()
-	ex2()
-	ex3()
 }
