@@ -121,6 +121,11 @@ type Decl struct {
 	lhs string
 	rhs Exp
 }
+type Assig struct{
+	lhs string
+	rhs Exp
+}
+
 type IfThenElse struct {
 	cond     Exp
 	thenStmt Stmt
