@@ -4,14 +4,16 @@
 
 > Simple imperative language
 
-Implementation of simple compiler with the following functionalities:
-
-1. Type checker
-2. Evaluator
-3. Interpreter
-
 - Based on: https://sulzmann.github.io/ModelBasedSW/imp.html
 - See lecture notes
+
+## About
+
+Implementation of simple compiler with the following functionalities:
+
+1. Type checker: Checks the types of the given Programm, Statement,... (F.ex 1 -> int)
+2. Evaluator: Evaluates the given Expression (F. ex 0 + 1 -> 1)
+3. Parser: Parses a given Program, Statement, Expression,... to a proper AST that can be evaluated
 
 _Syntax definition:_
 
@@ -42,7 +44,7 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 
 ## Usage
 
-1. Run project: `go run main.go`
+1. Build and run: `go build main.go && ./imp-project`
 2. Run tests: `go test -v`
 
 ## TODO

@@ -32,45 +32,6 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
      | vars                  -- Variables
 */
 
-// Values
-
-type Kind int
-
-const (
-	ValueInt  Kind = 0
-	ValueBool Kind = 1
-	Undefined Kind = 2
-)
-
-type Val struct {
-	flag Kind
-	valI int
-	valB bool
-}
-
-func mkInt(x int) Val {
-	return Val{flag: ValueInt, valI: x}
-}
-func mkBool(x bool) Val {
-	return Val{flag: ValueBool, valB: x}
-}
-func mkUndefined() Val {
-	return Val{flag: Undefined}
-}
-
-func showVal(v Val) string {
-	var s string
-	switch {
-	case v.flag == ValueInt:
-		s = Num(v.valI).pretty()
-	case v.flag == ValueBool:
-		s = Bool(v.valB).pretty()
-	case v.flag == Undefined:
-		s = "Undefined"
-	}
-	return s
-}
-
 // Types
 
 type Type int
@@ -554,38 +515,66 @@ func or(x, y Exp) Exp {
 	return (Or)([2]Exp{x, y})
 }
 
-// Examples
-
-func run(e Exp) {
+// Function to evaluate an expression
+func runExpr(e Exp) {
 	s := make(map[string]Val)
 	t := make(map[string]Type)
-	fmt.Printf("\n ******* ")
+	fmt.Printf("\n ******* EXPRESSIONS ******* \n")
 	fmt.Printf("\n %s", e.pretty())
 	fmt.Printf("\n %s", showVal(e.eval(s)))
 	fmt.Printf("\n %s", showType(e.infer(t)))
 }
 
-func ex1() {
-	ast := plus(mult(number(1), number(2)), number(0))
+// Function to evaluate a statement
+func runStmt(st Stmt) {
+	fmt.Printf("\n ******* STATEMENTS ******* \n")
+	fmt.Printf("\n %s", st.pretty())
 
-	run(ast)
+	s := make(map[string]Val)
+	t := make(map[string]Type)
+
+	// Check whether the statement is well typed
+	// Save the Name with the Type in t
+	isCorrect := st.check(t)
+
+	if isCorrect {
+		fmt.Printf("\n Successfully checked the statement")
+	} else {
+		fmt.Printf("\n Error checking the statement!")
+		return
+	}
+
+	// Evaluate the statement
+	// Save the Name with the Value in s
+	st.eval(s)
+	printStatemnt(s)
 }
 
-func ex2() {
-	ast := and(boolean(false), number(0))
-	run(ast)
+// Function to print the state of the statement
+func printStatemnt(s ValState) {
+	fmt.Printf("\n State of the statement: \n")
+	for k, v := range s {
+		fmt.Printf("\n %s = %s", k, showVal(v))
+	}
 }
 
-func ex3() {
-	ast := or(boolean(false), number(0))
-	run(ast)
+// Check whether a program is well typed
+func (prog Prog) checkProgType() bool {
+	fmt.Printf("\n ******* PROGRAM TYPE CHECK ******* \n")
+	fmt.Printf("\n %s", prog.block.pretty())
+
+	t := make(map[string]Type)
+
+	// Check whether the program is well typed
+	// Save the Name with the Type in t
+	isCorrect := prog.block.check(t)
+
+	if isCorrect {
+		fmt.Printf("\n Successfully checked the program")
+	} else {
+		fmt.Printf("\n Error checking the program!")
+	}
+
 }
 
-func main() {
-
-	fmt.Printf("\n")
-
-	ex1()
-	ex2()
-	ex3()
-}
+func main() {}
