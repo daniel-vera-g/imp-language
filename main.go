@@ -427,6 +427,7 @@ func or(x, y Exp) Exp {
 	return (Or)([2]Exp{x, y})
 }
 
+// Function to evaluate an expression
 func runExpr(e Exp) {
 	s := make(map[string]Val)
 	t := make(map[string]Type)
@@ -434,6 +435,58 @@ func runExpr(e Exp) {
 	fmt.Printf("\n %s", e.pretty())
 	fmt.Printf("\n %s", showVal(e.eval(s)))
 	fmt.Printf("\n %s", showType(e.infer(t)))
+}
+
+// Function to evaluate a statement
+func runStmt(st Stmt) {
+	fmt.Printf("\n ******* STATEMENTS ******* \n")
+	fmt.Printf("\n %s", st.pretty())
+
+	s := make(map[string]Val)
+	t := make(map[string]Type)
+
+	// Check whether the statement is well typed
+	// Save the Name with the Type in t
+	isCorrect := st.check(t)
+
+	if isCorrect {
+		fmt.Printf("\n Successfully checked the statement")
+	} else {
+		fmt.Printf("\n Error checking the statement!")
+		return
+	}
+
+	// Evaluate the statement
+	// Save the Name with the Value in s
+	st.eval(s)
+	printStatemnt(s)
+}
+
+// Function to print the state of the statement
+func printStatemnt(s ValState) {
+	fmt.Printf("\n State of the statement: \n")
+	for k, v := range s {
+		fmt.Printf("\n %s = %s", k, showVal(v))
+	}
+}
+
+// Check whether a program is well typed
+func (prog Prog) checkProgType() bool {
+	fmt.Printf("\n ******* PROGRAM TYPE CHECK ******* \n")
+	fmt.Printf("\n %s", prog.block.pretty())
+
+	t := make(map[string]Type)
+
+	// Check whether the program is well typed
+	// Save the Name with the Type in t
+	isCorrect := prog.block.check(t)
+
+	if isCorrect {
+		fmt.Printf("\n Successfully checked the program")
+	} else {
+		fmt.Printf("\n Error checking the program!")
+	}
+
 }
 
 func main() {
