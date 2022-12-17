@@ -1,6 +1,28 @@
 package main
 
+import "fmt"
+
 // type check
+
+// Checks whether the program is well typed
+// Returns bool whether the program is well typed
+func (prog Prog) checkProgType() bool {
+
+	typeMapping := make(map[string]Type)
+
+	// Check whether the program is well typed
+	isCorrect := prog.block.stmt.check(typeMapping)
+	printCheck := false
+
+	if isCorrect {
+		fmt.Printf("\n Successfully checked the program")
+		printCheck = printTypeStatemnt(typeMapping)
+	} else {
+		fmt.Printf("\n Error checking the types of the program!")
+		return false
+	}
+	return printCheck
+}
 
 /////////////////////////
 // Statements

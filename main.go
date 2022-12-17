@@ -7,6 +7,7 @@ import (
 // Simple imperative language
 
 // Handle expressions
+// Type checks and evaluates an expression
 func handleExpr(e Exp) {
 	valueMapping := make(map[string]Val)
 	typeMapping := make(map[string]Type)
@@ -17,6 +18,7 @@ func handleExpr(e Exp) {
 }
 
 // Handle statements
+// Type checks and evaluates a statement
 func handleStmt(st Stmt) {
 	fmt.Printf("\n ******* STATEMENTS ******* \n")
 	fmt.Printf("\n %s", st.pretty())
@@ -39,6 +41,28 @@ func handleStmt(st Stmt) {
 	// Save the Name with the Value in s
 	st.eval(valueMapping)
 	printValueStatemnt(valueMapping)
+}
+
+// Handle program
+// Type checks and evaluates a program
+func (prog Prog) handleProgram() {
+
+	// First do some type checking
+	isTypeSave := prog.checkProgType()
+
+	if isTypeSave {
+		fmt.Printf("\n Successfully checked the program")
+
+		valueMapping := make(map[string]Val)
+
+		// Evaluate the program
+		// Save the Name with the Value in valueMapping
+		prog.block.stmt.eval(valueMapping)
+		printValueStatemnt(valueMapping)
+	} else {
+		fmt.Printf("\n Error checking the program types!")
+		return
+	}
 }
 
 func main() {}

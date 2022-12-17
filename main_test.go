@@ -4,7 +4,7 @@ import (
 	"testing"
 )
 
-// Test expressions
+// Expressions tests
 
 func Test_ex1(t *testing.T) {
 	ast := plus(mult(number(1), number(2)), number(0))
@@ -21,7 +21,7 @@ func Test_ex3(t *testing.T) {
 	handleExpr(ast)
 }
 
-// Test statements
+// Statements tests
 
 func Test_st1(t *testing.T) {
 	ast := seq(decl("x", number(1)), print(plus(mult(number(1), number(2)), number(0))))
@@ -40,6 +40,23 @@ func Test_st3(t *testing.T) {
 
 func TestMain(t *testing.T) {
 	main()
+}
+
+// Program tests
+
+func Test_p1(t *testing.T) {
+	ast := prog(block(seq(decl("x", number(1)), print(plus(mult(number(1), number(2)), number(0))))))
+	ast.handleProgram()
+}
+
+func Test_p2(t *testing.T) {
+	ast := prog(block(print(and(boolean(false), number(0)))))
+	ast.handleProgram()
+}
+
+func Test_p3(t *testing.T) {
+	ast := prog(block(print(or(boolean(false), number(0)))))
+	ast.handleProgram()
 }
 
 // TODO add more tests here
