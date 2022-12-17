@@ -1,5 +1,7 @@
 # IMP - Project
 
+[![Go](https://github.com/daniel-vera-g/imp-language/actions/workflows/go.yml/badge.svg)](https://github.com/daniel-vera-g/imp-language/actions/workflows/go.yml)
+
 > Simple imperative language
 
 - Based on: https://sulzmann.github.io/ModelBasedSW/imp.html
