@@ -11,9 +11,9 @@
 
 Implementation of simple compiler with the following functionalities:
 
-1. Type checker: Checks the types of the given Programm, Statement,... (F.ex 1 -> int)
-2. Evaluator: Evaluates the given Expression (F. ex 0 + 1 -> 1)
-3. Parser: Parses a given Program, Statement, Expression,... to a proper AST that can be evaluated
+1. **Type checker** : Checks the types of the given Programm, Statement,... (F.ex `1 -> int`)
+2. **Evaluator** : Evaluates the given Expression (F.ex `0 + 1 -> 1`)
+3. **Parser** : Parses a given Program, Statement, Expression,... to a proper AST that can be evaluated (F.ex `1+0 -> plus(number(1), number(0))`)
 
 _Syntax definition:_
 
@@ -47,12 +47,10 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 1. Build and run: `go build main.go && ./imp-project`
 2. Run tests: `go test -v`
 
-## TODO
+## TODOs
 
-## General
-
-- [ ] GitHub Repository
-  - [ ] CI Pipeline
+- [x] GitHub Repository
+  - [x] CI Pipeline
 - [ ] Type checker
   - [ ] Tests
 - [ ] Evaluator
