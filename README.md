@@ -44,7 +44,7 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 
 ## Usage
 
-1. Run project: `go run main.go`
+1. Build and run: `go build main.go && ./imp-project`
 2. Run tests: `go test -v`
 
 ## TODO
