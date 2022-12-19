@@ -17,3 +17,21 @@ func printValueStatemnt(s ValState) {
 	}
 	fmt.Printf("]\t") // End the environment S
 }
+
+// Same as printValueStatemnt but for types
+func printTypeStatemnt(t TyState) bool {
+	fmt.Printf("\n G: [\t") // Begin the environment T
+	for k, v := range t {
+		if v == TyInt {
+			fmt.Printf(k, " : ", "int", "\t")
+		}
+		if v == TyBool {
+			fmt.Printf(k, " : ", "bool", "\t")
+		} else {
+			fmt.Printf("Undefined type in G: %s", k)
+			return false
+		}
+	}
+	fmt.Printf("]\t") // End the environment T
+	return true
+}
