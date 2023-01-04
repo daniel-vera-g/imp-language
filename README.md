@@ -4,16 +4,13 @@
 
 > Simple imperative language
 
-- Based on: https://sulzmann.github.io/ModelBasedSW/imp.html
-- See lecture notes
-
 ## About
 
 Implementation of simple compiler with the following functionalities:
 
+1. **Parser** : Parses a given Program, Statement, Expression,... to a proper AST that can be further processed (F.ex `1+0 -> plus(number(1), number(0))`)
 1. **Type checker** : Checks the types of the given Programm, Statement,... (F.ex `1 -> int`)
-2. **Evaluator** : Evaluates the given Expression (F.ex `0 + 1 -> 1`)
-3. **Parser** : Parses a given Program, Statement, Expression,... to a proper AST that can be evaluated (F.ex `1+0 -> plus(number(1), number(0))`)
+1. **Evaluator** : Evaluates the given Expression (F.ex `0 + 1 -> 1`)
 
 _Syntax definition:_
 
@@ -52,8 +49,17 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 - [x] GitHub Repository
   - [x] CI Pipeline
 - [ ] Type checker
+  - [x] Implementation
   - [ ] Tests
 - [ ] Evaluator
+  - [x] Implementation
   - [ ] Tests
 - [ ] Parser
+  - [ ] Lexer: Implementation
+  - [ ] Parser: Implementation
   - [ ] Tests
+
+## References
+
+- Based on: https://sulzmann.github.io/ModelBasedSW/imp.html (See lecture notes)
+- Lexer and parser: https://www.cristiandima.com/top-down-operator-precedence-parsing-in-go
