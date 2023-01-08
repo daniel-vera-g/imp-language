@@ -62,4 +62,4 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 ## References
 
 - Based on: https://sulzmann.github.io/ModelBasedSW/imp.html (See lecture notes)
-- Lexer and parser: https://www.cristiandima.com/top-down-operator-precedence-parsing-in-go
+- Used Parser(Pratt Parser): https://dl.acm.org/doi/10.1145/512927.512931
