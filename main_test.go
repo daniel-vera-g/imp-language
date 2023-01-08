@@ -1,8 +1,20 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
+
+// Parser Tests
+
+func Test_parser1(t *testing.T) {
+	l := newLexer("x := 1 + 2;")
+	p := parser{lexer: l}
+
+	statements := p.statements()
+	fmt.Println(statements)
+	// TODO check/create ast
+}
 
 // Expressions tests
 

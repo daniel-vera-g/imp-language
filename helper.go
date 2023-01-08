@@ -35,3 +35,6 @@ func printTypeStatemnt(t TyState) bool {
 	fmt.Printf("]\t") // End the environment T
 	return true
 }
+
+// Creates the consumable AST from an Array of Children
+// TODO

@@ -2,8 +2,6 @@ package main
 
 // Types
 
-// Types
-
 type Type int
 
 const (
