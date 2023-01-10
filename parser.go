@@ -91,7 +91,7 @@ func buildAstStmt(stmt *token) Stmt {
 
 	if numChildren == 1 {
 		switch stmt.symbol {
-		case "PRINT":
+		case "print":
 			ast = printStmt(buildAstExpr(stmt.children[0]))
 		}
 	} else if numChildren == 2 {
@@ -102,8 +102,8 @@ func buildAstStmt(stmt *token) Stmt {
 			ast = seq(buildAstStmt(stmt.children[0]), buildAstStmt(stmt.children[1]))
 		case "=": // Assignment
 			ast = assign(stmt.children[0].value, buildAstExpr(stmt.children[1]))
-		case "WHILE":
-			ast = while(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1]))
+		case "while":
+			ast = while(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1].children[0]))
 		}
 	} else if numChildren == 3 {
 		if stmt.symbol == "if" {
@@ -180,9 +180,9 @@ func buildAstExpr(stmt *token) Exp {
 	} else if numChildren == 1 {
 		switch stmt.symbol {
 		case "!":
-			neg(buildAstExpr(stmt.children[0]))
-		case "(":
-			gro(buildAstExpr(stmt.children[0]))
+			ast = neg(buildAstExpr(stmt.children[0]))
+		case "()":
+			ast = gro(buildAstExpr(stmt.children[0]))
 		}
 	} else if numChildren == 2 {
 		switch stmt.symbol {
