@@ -92,7 +92,10 @@ func newTokenRegistry() *tokenRegistry {
 		t.children = append(t.children, p.block())
 		return t
 	})
-
+	tokenReg.statement("print", func(t *token, p *parser) *token {
+		t.children = append(t.children, p.expression(0))
+		return t
+	})
 	tokenReg.statement("{", func(t *token, p *parser) *token {
 		t.children = append(t.children, p.statements()...)
 		p.advance("}")
