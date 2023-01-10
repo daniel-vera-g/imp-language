@@ -114,6 +114,14 @@ func buildAstStmt(stmt *token) Stmt {
 	return ast
 }
 
+func iterateStatements(t []*token) Stmt {
+	var stmtToReturn Stmt
+	for _, stmt := range t {
+		stmtToReturn = buildAstStmt(stmt)
+	}
+	return stmtToReturn
+}
+
 func printStmt(x Exp) Stmt {
 	return Print{expre: x}
 }

@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 // Simple imperative language
@@ -65,4 +66,19 @@ func (prog Prog) handleProgram() {
 	}
 }
 
-func main() {}
+func main() {
+	stmt := os.Args[1]
+	// TODO accept input parameters, parse them, type check them, and evaluate them
+
+	l := newLexer(stmt)
+	p := parser{lexer: l}
+
+	// TODO For Prog and Block?
+	// See: https://ilias.h-ka.de/ilias.php?ref_id=719974&cmdClass=ilobjforumgui&thr_pk=18066&page=0&cmd=viewThread&cmdNode=xm:o9&baseClass=ilrepositorygui
+	// Ich schlage "entweder oder" vor. D.h. entweder prog ::= block oder prog ::= statement
+
+	statements := p.statements()
+	for _, s := range statements {
+		handleStmt(buildAstStmt(s))
+	}
+}

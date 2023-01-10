@@ -1,19 +1,19 @@
 package main
 
 import (
-	"fmt"
 	"testing"
 )
 
 // Parser Tests
 
 func Test_parser1(t *testing.T) {
-	l := newLexer("x := 1 + 2;")
+	l := newLexer("x := 1 ; x=x+2;")
 	p := parser{lexer: l}
 
 	statements := p.statements()
-	fmt.Println(statements)
-	// TODO check/create ast
+	// stmt := statements[0]
+	ast := prog(block(iterateStatements(statements)))
+	ast.handleProgram()
 }
 
 // Expressions tests
@@ -36,17 +36,17 @@ func Test_ex3(t *testing.T) {
 // Statements tests
 
 func Test_st1(t *testing.T) {
-	ast := seq(decl("x", number(1)), print(plus(mult(number(1), number(2)), number(0))))
+	ast := seq(decl("x", number(1)), printStmt(plus(mult(number(1), number(2)), number(0))))
 	handleStmt(ast)
 }
 
 func Test_st2(t *testing.T) {
-	ast := print(and(boolean(false), number(0)))
+	ast := printStmt(and(boolean(false), number(0)))
 	handleStmt(ast)
 }
 
 func Test_st3(t *testing.T) {
-	ast := print(or(boolean(false), number(0)))
+	ast := printStmt(or(boolean(false), number(0)))
 	handleStmt(ast)
 }
 
@@ -57,17 +57,17 @@ func TestMain(t *testing.T) {
 // Program tests
 
 func Test_p1(t *testing.T) {
-	ast := prog(block(seq(decl("x", number(1)), print(plus(mult(number(1), number(2)), number(0))))))
+	ast := prog(block(seq(decl("x", number(1)), printStmt(plus(mult(number(1), number(2)), number(0))))))
 	ast.handleProgram()
 }
 
 func Test_p2(t *testing.T) {
-	ast := prog(block(print(and(boolean(false), number(0)))))
+	ast := prog(block(printStmt(and(boolean(false), number(0)))))
 	ast.handleProgram()
 }
 
 func Test_p3(t *testing.T) {
-	ast := prog(block(print(or(boolean(false), number(0)))))
+	ast := prog(block(printStmt(or(boolean(false), number(0)))))
 	ast.handleProgram()
 }
 
