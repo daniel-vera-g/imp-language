@@ -7,11 +7,10 @@ import (
 // Parser Tests
 
 func Test_parser1(t *testing.T) {
-	l := newLexer("x := 1 ; x=x+2;")
+	l := newLexer("x:=1+2;")
 	p := parser{lexer: l}
 
 	statements := p.statements()
-	// stmt := statements[0]
 	ast := prog(block(iterateStatements(statements)))
 	ast.handleProgram()
 }
