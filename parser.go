@@ -1,6 +1,80 @@
 package main
 
-// Parser
+import (
+	"fmt"
+	"strconv"
+)
+
+type parser struct {
+	lexer *impLexer
+}
+
+// Parses an Expression
+// Gets called on Prefix operators
+func (self *parser) expression(rbp int) *token {
+	var left *token
+	t := self.lexer.next()
+
+	if t.nud != nil {
+		left = t.nud(t, self) // Note: Returns itself if it's a prefix operator
+	} else {
+		panic(fmt.Sprint("NOT PREFIX", t))
+	}
+	for rbp < self.lexer.peek().bindingPower { // Check binding power...
+		t := self.lexer.next() // ...and if it's higher, parse the next token
+		if t.led != nil {
+			left = t.led(t, self, left) // Select new left token. Should be an expression.
+		} else {
+			panic(fmt.Sprint("NOT INFIX", t))
+		}
+	}
+
+	return left
+}
+
+// Advance to the next token if it's the expected one
+// Used f.ex to check the end of the statement (;)
+func (self *parser) advance(expected string) *token {
+	tok := self.lexer.next()
+	if tok.symbol != expected {
+		panic(fmt.Sprint("WAS LOOKING FOR", expected, "GOT", tok))
+	}
+	return tok
+}
+
+// Parses a Block
+func (self *parser) block() *token {
+	tok := self.lexer.next()
+	if tok.symbol != "{" {
+		panic(fmt.Sprint("WAS LOOKING FOR BLOCK START", tok))
+	}
+	block := tok.std(tok, self)
+	return block
+}
+
+// Parses a Statement
+func (self *parser) statement() *token {
+	tok := self.lexer.peek()
+	if tok.std != nil {
+		tok = self.lexer.next()
+		return tok.std(tok, self)
+	}
+	res := self.expression(0)
+	self.advance(";")
+	return res
+}
+
+// Parses multiple statements.
+// Used f.ex at the top level
+func (self *parser) statements() []*token {
+	stmts := []*token{}
+	next := self.lexer.peek()
+	for next.symbol != "EOF" && next.symbol != "}" {
+		stmts = append(stmts, self.statement())
+		next = self.lexer.peek()
+	}
+	return stmts
+}
 
 // Helper functions to build ASTs by hand
 
@@ -8,7 +82,51 @@ package main
 // Statements
 /////////////////////////
 
-func print(x Exp) Stmt {
+// Calls the respective AST Methods to create the AST.
+// This is for Statements specifically
+func buildAstStmt(stmt *token) Stmt {
+	var ast Stmt
+
+	numChildren := len(stmt.children)
+
+	if numChildren == 1 {
+		switch stmt.symbol {
+		case "print":
+			ast = printStmt(buildAstExpr(stmt.children[0]))
+		}
+	} else if numChildren == 2 {
+		switch stmt.symbol {
+		case ":=": // Declaration
+			ast = decl(stmt.children[0].value, buildAstExpr(stmt.children[1]))
+		case "SEQ":
+			ast = seq(buildAstStmt(stmt.children[0]), buildAstStmt(stmt.children[1]))
+		case "=": // Assignment
+			ast = assign(stmt.children[0].value, buildAstExpr(stmt.children[1]))
+		case "while":
+			ast = while(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1].children[0]))
+		}
+	} else if numChildren == 3 {
+		if stmt.symbol == "if" {
+			// For the statements we use the second children as we do not need the grouping
+			ast = ifthenelse(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1].children[0]), buildAstStmt(stmt.children[2].children[0]))
+		}
+	}
+
+	return ast
+}
+
+func iterateStatements(t []*token) Stmt {
+	var stmtToReturn Stmt
+	numberStatements := len(t)
+	if numberStatements > 1 {
+		stmtToReturn = seq(buildAstStmt(t[0]), buildAstStmt(t[1]))
+	} else {
+		stmtToReturn = buildAstStmt(t[0])
+	}
+	return stmtToReturn
+}
+
+func printStmt(x Exp) Stmt {
 	return Print{expre: x}
 }
 
@@ -35,6 +153,55 @@ func while(x Exp, y Stmt) Stmt {
 /////////////////////////
 // Expressions
 /////////////////////////
+
+// Calls the respective AST Methods to create the AST.
+// This is for Expressions specifically
+func buildAstExpr(stmt *token) Exp {
+	var ast Exp
+
+	numChildren := len(stmt.children)
+
+	if numChildren == 0 {
+		switch stmt.symbol {
+		case "NUMBER":
+			num, _ := strconv.Atoi(stmt.value)
+			ast = number(num)
+		case "true":
+			boolVal, _ := strconv.ParseBool(stmt.value)
+			ast = boolean(boolVal)
+		case "false":
+			boolVal, _ := strconv.ParseBool(stmt.value)
+			ast = boolean(boolVal)
+		case "IDENTIFIER":
+			ast = vars(stmt.value)
+		}
+	} else if numChildren == 1 {
+		switch stmt.symbol {
+		case "!":
+			ast = neg(buildAstExpr(stmt.children[0]))
+		case "()":
+			ast = gro(buildAstExpr(stmt.children[0]))
+		}
+	} else if numChildren == 2 {
+		switch stmt.symbol {
+		case "+":
+			ast = plus(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "*":
+			ast = mult(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "&&":
+			ast = and(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "||":
+			ast = or(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "==":
+			ast = equ(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "<":
+			ast = les(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+
+		}
+	} else if numChildren == 3 {
+	}
+	return ast
+}
 
 func number(x int) Exp {
 	return Num(x)

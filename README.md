@@ -8,9 +8,20 @@
 
 Implementation of simple compiler with the following functionalities:
 
-1. **Parser** : Parses a given Program, Statement, Expression,... to a proper AST that can be further processed (F.ex `1+0 -> plus(number(1), number(0))`)
-1. **Type checker** : Checks the types of the given Programm, Statement,... (F.ex `1 -> int`)
-1. **Evaluator** : Evaluates the given Expression (F.ex `0 + 1 -> 1`)
+1. **Parser** :
+
+- Parses a given Program, Statement, Expression,... to a proper AST that can be further processed
+- For example: `1+0 -> plus(number(1), number(0))`
+
+2. **Type checker** :
+
+- Checks the types of the given Programm, Statement,...
+- For example: `1 -> int`
+
+3. **Evaluator** :
+
+- Evaluates the given Expression
+- For example: `1+0 -> 1`
 
 _Syntax definition:_
 
@@ -41,25 +52,13 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 
 ## Usage
 
-1. Build and run: `go build main.go && ./imp-project`
-2. Run tests: `go test -v`
-
-## TODOs
-
-- [x] GitHub Repository
-  - [x] CI Pipeline
-- [ ] Type checker
-  - [x] Implementation
-  - [ ] Tests
-- [ ] Evaluator
-  - [x] Implementation
-  - [ ] Tests
-- [ ] Parser
-  - [ ] Lexer: Implementation
-  - [ ] Parser: Implementation
-  - [ ] Tests
+1. Build: `go build main.go`
+2. Run: `./imp-project 'x := 1+2*3;'` (First parameter is Program to compile)
+3. Run tests: `go test -v`
 
 ## References
 
 - Based on: https://sulzmann.github.io/ModelBasedSW/imp.html (See lecture notes)
-- Lexer and parser: https://www.cristiandima.com/top-down-operator-precedence-parsing-in-go
+- Used Parser(Pratt Parser):
+  - https://dl.acm.org/doi/10.1145/512927.512931
+  - https://crockford.com/javascript/tdop/tdop.html

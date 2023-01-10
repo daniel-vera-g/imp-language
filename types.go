@@ -2,8 +2,6 @@ package main
 
 // Types
 
-// Types
-
 type Type int
 
 const (
@@ -73,7 +71,7 @@ type Print struct {
 	expre Exp
 }
 
-// Expression cases (incomplete)
+// Expression cases
 
 type Bool bool
 type Num int

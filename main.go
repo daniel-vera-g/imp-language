@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"os"
 )
 
 // Simple imperative language
@@ -65,4 +66,13 @@ func (prog Prog) handleProgram() {
 	}
 }
 
-func main() {}
+func main() {
+	stmt := os.Args[1]
+
+	l := newLexer(stmt)
+	p := parser{lexer: l}
+
+	statements := p.statements()
+	ast := prog(block(iterateStatements(statements)))
+	ast.handleProgram()
+}
