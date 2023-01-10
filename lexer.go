@@ -327,7 +327,7 @@ func (self *impLexer) next() *token {
 
 // Is the character a valid operator?
 func isOperatorChar(r rune) bool {
-	possibleOperators := "|+*&!=()<;:="
+	possibleOperators := "|+*&!=()<;:={}"
 	for _, op := range possibleOperators {
 		if r == op {
 			return true
