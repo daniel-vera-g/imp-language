@@ -154,8 +154,6 @@ func while(x Exp, y Stmt) Stmt {
 // Expressions
 /////////////////////////
 
-// TODO Prog and Block in BuildAst
-
 // Calls the respective AST Methods to create the AST.
 // This is for Expressions specifically
 func buildAstExpr(stmt *token) Exp {

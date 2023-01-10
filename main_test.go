@@ -115,6 +115,3 @@ func Test_p3(t *testing.T) {
 	ast := prog(block(printStmt(or(boolean(false), number(0)))))
 	ast.handleProgram()
 }
-
-// TODO add more tests here
-// See:

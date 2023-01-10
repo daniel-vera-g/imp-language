@@ -56,22 +56,6 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 2. Run: `./imp-project 'x := 1+2*3;'` (First parameter is Program to compile)
 3. Run tests: `go test -v`
 
-## TODOs
-
-- [x] GitHub Repository
-  - [x] CI Pipeline
-- [ ] Type checker
-  - [x] Implementation
-  - [ ] Tests
-- [ ] Evaluator
-  - [x] Implementation
-  - [ ] Tests
-- [ ] Parser
-  - [ ] Lexer: Implementation
-  - [ ] Parser: Implementation
-  - [ ] Tests
-- [ ] Code TODOs
-
 ## References
 
 - Based on: https://sulzmann.github.io/ModelBasedSW/imp.html (See lecture notes)

@@ -37,8 +37,8 @@ func newTokenRegistry() *tokenRegistry {
 	tokenReg.infix("==", 20)
 	tokenReg.infix("<", 30)
 
-	tokenReg.infixRight("||", 25) // TODO same binding power as && ?
-	tokenReg.infixRight("&&", 25)
+	tokenReg.infixRight("||", 25)
+	tokenReg.infixRight("&&", 30)
 	tokenReg.infixRight("=", 10)
 	// TODO Difference declaration and assignment?
 	tokenReg.infixRight(":=", 10)
