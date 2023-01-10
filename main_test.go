@@ -7,7 +7,7 @@ import (
 // Parser Tests
 
 func Test_parser1(t *testing.T) {
-	l := newLexer("x:=1+2;")
+	l := newLexer("x:=1+2;x=3+1;")
 	p := parser{lexer: l}
 
 	statements := p.statements()
