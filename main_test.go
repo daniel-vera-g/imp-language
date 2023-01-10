@@ -1,18 +1,68 @@
 package main
 
 import (
+	"fmt"
 	"testing"
 )
 
 // Parser Tests
 
-func Test_parser1(t *testing.T) {
-	l := newLexer("if false { x := 2+1; } else { x := 2; }")
-	p := parser{lexer: l}
+type parser_tests struct {
+	code        string
+	description string
+}
 
-	statements := p.statements()
-	ast := prog(block(iterateStatements(statements)))
-	ast.handleProgram()
+func Test_parser_statements(t *testing.T) {
+
+	statements_parser_test := []parser_tests{
+		{"x := 1; x = 3;", "Sequence, Declaration & Assignment"},
+		{"x := true; while x { x = false; y := 4;}", "While"},
+		{"if false { x := 2+1; } else { x := 2; }", "ifthenelse"},
+		{"print 1+2", "print"},
+	}
+
+	for _, test := range statements_parser_test {
+
+		fmt.Printf("\n------------------------\n")
+		fmt.Printf("%s", test.description)
+		fmt.Printf("\n------------------------\n")
+
+		l := newLexer(test.code)
+		p := parser{lexer: l}
+
+		statements := p.statements()
+		ast := prog(block(iterateStatements(statements)))
+		ast.handleProgram()
+	}
+}
+
+func Test_parser_expressions(t *testing.T) {
+
+	expression_parser_tests := []parser_tests{
+		{"x := 1 + 2;", "Plus"},
+		{"x := 1 * 2;", "Mult"},
+		{"x := 1 + 2 * 3;", "Mult & Plus"},
+		{"x := true && false;", "And"},
+		{"x := true || false;", "Or"},
+		{"x := !true;", "Neg"},
+		{"x := 1 == 2;", "Equal"},
+		{"x := 1 < 2;", "LessThan"},
+		{"x := (1+2)*3;", "Grouping"},
+	}
+
+	for _, test := range expression_parser_tests {
+
+		fmt.Printf("\n------------------------\n")
+		fmt.Printf("%s", test.description)
+		fmt.Printf("\n------------------------\n")
+
+		l := newLexer(test.code)
+		p := parser{lexer: l}
+
+		statements := p.statements()
+		ast := prog(block(iterateStatements(statements)))
+		ast.handleProgram()
+	}
 }
 
 // Expressions tests
@@ -49,10 +99,6 @@ func Test_st3(t *testing.T) {
 	handleStmt(ast)
 }
 
-func TestMain(t *testing.T) {
-	main()
-}
-
 // Program tests
 
 func Test_p1(t *testing.T) {
@@ -71,4 +117,4 @@ func Test_p3(t *testing.T) {
 }
 
 // TODO add more tests here
-// See: https://gobyexample.com/testing
+// See:
