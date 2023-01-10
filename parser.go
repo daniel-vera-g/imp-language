@@ -1,6 +1,9 @@
 package main
 
-import "fmt"
+import (
+	"fmt"
+	"strconv"
+)
 
 type parser struct {
 	lexer *impLexer
@@ -73,12 +76,45 @@ func (self *parser) statements() []*token {
 	return stmts
 }
 
+// Helper functions to build ASTs by hand
+
 /////////////////////////
 // Statements
-// Helper functions to build ASTs by hand
 /////////////////////////
 
-func print(x Exp) Stmt {
+// Calls the respective AST Methods to create the AST.
+// This is for Statements specifically
+func buildAstStmt(stmt *token) Stmt {
+	var ast Stmt
+
+	numChildren := len(stmt.children)
+
+	if numChildren == 1 {
+		switch stmt.symbol {
+		case "PRINT":
+			ast = printStmt(buildAstExpr(stmt.children[0]))
+		}
+	} else if numChildren == 2 {
+		switch stmt.symbol {
+		case ":=": // Declaration
+			ast = decl(stmt.children[0].value, buildAstExpr(stmt.children[1]))
+		case "SEQ":
+			ast = seq(buildAstStmt(stmt.children[0]), buildAstStmt(stmt.children[1]))
+		case "=": // Assignment
+			ast = assign(stmt.children[0].value, buildAstExpr(stmt.children[1]))
+		case "WHILE":
+			ast = while(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1]))
+		}
+	} else if numChildren == 3 {
+		if stmt.symbol == "if" {
+			ast = ifthenelse(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1]), buildAstStmt(stmt.children[2]))
+		}
+	}
+
+	return ast
+}
+
+func printStmt(x Exp) Stmt {
 	return Print{expre: x}
 }
 
@@ -105,6 +141,57 @@ func while(x Exp, y Stmt) Stmt {
 /////////////////////////
 // Expressions
 /////////////////////////
+
+// TODO Prog and Block in BuildAst
+
+// Calls the respective AST Methods to create the AST.
+// This is for Expressions specifically
+func buildAstExpr(stmt *token) Exp {
+	var ast Exp
+
+	numChildren := len(stmt.children)
+
+	if numChildren == 0 {
+		switch stmt.symbol {
+		case "NUMBER":
+			num, _ := strconv.Atoi(stmt.value)
+			ast = number(num)
+		case "true":
+			boolVal, _ := strconv.ParseBool(stmt.value)
+			ast = boolean(boolVal)
+		case "false":
+			boolVal, _ := strconv.ParseBool(stmt.value)
+			ast = boolean(boolVal)
+		case "IDENTIFIER":
+			ast = vars(stmt.value)
+		}
+	} else if numChildren == 1 {
+		switch stmt.symbol {
+		case "!":
+			neg(buildAstExpr(stmt.children[0]))
+		case "(":
+			gro(buildAstExpr(stmt.children[0]))
+		}
+	} else if numChildren == 2 {
+		switch stmt.symbol {
+		case "+":
+			ast = plus(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "*":
+			ast = mult(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "&&":
+			ast = and(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "||":
+			ast = or(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "==":
+			ast = equ(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+		case "<":
+			ast = les(buildAstExpr(stmt.children[0]), buildAstExpr(stmt.children[1]))
+
+		}
+	} else if numChildren == 3 {
+	}
+	return ast
+}
 
 func number(x int) Exp {
 	return Num(x)
