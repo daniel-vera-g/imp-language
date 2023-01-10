@@ -107,7 +107,8 @@ func buildAstStmt(stmt *token) Stmt {
 		}
 	} else if numChildren == 3 {
 		if stmt.symbol == "if" {
-			ast = ifthenelse(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1]), buildAstStmt(stmt.children[2]))
+			// For the statements we use the second children as we do not need the grouping
+			ast = ifthenelse(buildAstExpr(stmt.children[0]), buildAstStmt(stmt.children[1].children[0]), buildAstStmt(stmt.children[2].children[0]))
 		}
 	}
 
@@ -116,8 +117,11 @@ func buildAstStmt(stmt *token) Stmt {
 
 func iterateStatements(t []*token) Stmt {
 	var stmtToReturn Stmt
-	for _, stmt := range t {
-		stmtToReturn = buildAstStmt(stmt)
+	numberStatements := len(t)
+	if numberStatements > 1 {
+		stmtToReturn = seq(buildAstStmt(t[0]), buildAstStmt(t[1]))
+	} else {
+		stmtToReturn = buildAstStmt(t[0])
 	}
 	return stmtToReturn
 }
