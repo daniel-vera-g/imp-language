@@ -53,7 +53,7 @@ exp ::= 0 | 1 | -1 | ...     -- Integers
 ## Usage
 
 1. Build: `go build main.go`
-2. Run: `./imp-project 1+2*3` (First parameter is Program to compile)
+2. Run: `./imp-project 'x := 1+2*3;'` (First parameter is Program to compile)
 3. Run tests: `go test -v`
 
 ## TODOs
