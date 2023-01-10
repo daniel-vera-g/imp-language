@@ -71,7 +71,7 @@ type Print struct {
 	expre Exp
 }
 
-// Expression cases (incomplete)
+// Expression cases
 
 type Bool bool
 type Num int

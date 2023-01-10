@@ -20,7 +20,7 @@ func printValueStatemnt(s ValState) {
 
 // Same as printValueStatemnt but for types
 func printTypeStatemnt(t TyState) bool {
-	fmt.Printf("\n G: [\t") // Begin the environment T
+	fmt.Printf("\n G: [\t") // Begin the environment G
 	for k, v := range t {
 		if v == TyInt {
 			fmt.Print(k, " : ", "int", "\t")
@@ -31,6 +31,6 @@ func printTypeStatemnt(t TyState) bool {
 			return false
 		}
 	}
-	fmt.Printf("]\t") // End the environment T
+	fmt.Printf("]\t") // End the environment G
 	return true
 }

@@ -2,7 +2,7 @@ package main
 
 import "strconv"
 
-// Here we have out beloved pretty printer
+// Here we have our beloved pretty printer
 
 /////////////////////////
 // Statements
