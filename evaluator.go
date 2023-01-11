@@ -18,15 +18,7 @@ func (whi While) eval(s ValState) {
 		whi.stmt.eval(s)
 	}
 }
-func (pri Print) eval(s ValState) {
-	value := pri.expre.eval(s)
 
-	if value.flag == ValueInt { // If it is an integer
-		fmt.Printf("\n %d", value.valI)
-	} else if value.flag == ValueBool { // If it is a boolean
-		fmt.Printf("\n %t", value.valB)
-	}
-}
 func (ite IfThenElse) eval(s ValState) {
 	v := ite.cond.eval(s)
 	if v.flag == ValueBool {
@@ -40,6 +32,16 @@ func (ite IfThenElse) eval(s ValState) {
 		fmt.Printf("if-then-else eval fail")
 	}
 
+}
+
+func (pri Print) eval(s ValState) {
+	value := pri.expre.eval(s)
+
+	if value.flag == ValueInt { // If it is an integer
+		fmt.Printf("\n %d", value.valI)
+	} else if value.flag == ValueBool { // If it is a boolean
+		fmt.Printf("\n %t", value.valB)
+	}
 }
 
 // Maps are represented via points.
@@ -87,26 +89,31 @@ func (e Plus) eval(s ValState) Val {
 }
 
 func (e And) eval(s ValState) Val {
+
 	b1 := e[0].eval(s)
-	b2 := e[1].eval(s)
-	switch {
-	case b1.flag == ValueBool && b1.valB == false:
+	if b1.flag == ValueBool && b1.valB == false {
 		return mkBool(false)
-	case b1.flag == ValueBool && b2.flag == ValueBool:
+	}
+
+	b2 := e[1].eval(s)
+	if b1.flag == ValueBool && b2.flag == ValueBool {
 		return mkBool(b1.valB && b2.valB)
 	}
+
 	return mkUndefined()
 }
 
 func (e Or) eval(s ValState) Val {
 	b1 := e[0].eval(s)
-	b2 := e[1].eval(s)
-	switch {
-	case b1.flag == ValueBool && b1.valB == true:
+	if b1.flag == ValueBool && b1.valB == true {
 		return mkBool(true)
-	case b1.flag == ValueBool && b2.flag == ValueBool:
+	}
+
+	b2 := e[1].eval(s)
+	if b1.flag == ValueBool && b2.flag == ValueBool {
 		return mkBool(b1.valB || b2.valB)
 	}
+
 	return mkUndefined()
 }
 
