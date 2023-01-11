@@ -124,3 +124,8 @@ func Test_shortCircuit(t *testing.T) {
 	handleStmt(astOr)
 	handleStmt(astAnd)
 }
+
+func Test_errorAssign(t *testing.T) {
+	ast := seq(decl("x", Num(2)), assign("x", number(1)))
+	handleStmt(ast)
+}
