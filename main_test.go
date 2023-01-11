@@ -126,6 +126,9 @@ func Test_shortCircuit(t *testing.T) {
 }
 
 func Test_errorAssign(t *testing.T) {
-	ast := seq(decl("x", Num(2)), assign("x", number(1)))
+	// Works:
+	// ast := seq(decl("x", Num(2)), assign("x", number(1)))
+	// Does not work:
+	ast := assign("x", number(1))
 	handleStmt(ast)
 }
