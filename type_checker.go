@@ -56,28 +56,11 @@ func (print Print) check(t TyState) bool {
 }
 
 func (while While) check(t TyState) bool {
-	// As in the documentation observations,
-	// we need to pay attention to the variable inside a while function.
-	// Therefore, as t is a map, we need to make a copy of it.
-	tCopy := make(TyState)
-	for k, v := range t {
-		tCopy[k] = v
-	}
-
-	return while.cond.infer(t) == TyBool && while.stmt.check(tCopy)
+	return while.cond.infer(t) == TyBool && while.stmt.check(t)
 }
 
 func (ifthenelse IfThenElse) check(t TyState) bool {
-	// Same procedure as in the while function
-	// Difference is that we need to check both the then and else statements
-	tCopyThen := make(TyState)
-	tCopyElse := make(TyState)
-	for k, v := range t {
-		tCopyThen[k] = v
-		tCopyElse[k] = v
-	}
-
-	return ifthenelse.cond.infer(t) == TyBool && ifthenelse.thenStmt.check(tCopyThen) && ifthenelse.elseStmt.check(tCopyElse)
+	return ifthenelse.cond.infer(t) == TyBool && ifthenelse.thenStmt.check(t) && ifthenelse.elseStmt.check(t)
 }
 
 /////////////////////////
